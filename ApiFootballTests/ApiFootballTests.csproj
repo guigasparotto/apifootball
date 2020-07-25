@@ -31,15 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Features\**\*.feature" />
         <Content Include="Tests\Features\LeagueTableTestCases.feature" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <SpecFlowFeatureFiles Update="Tests\Features\LeagueTableTestCases.feature">
-        <CodeBehindFile>Features/LeagueTableTestCases.feature.cs</CodeBehindFile>
-        <Visible>true</Visible>
-      </SpecFlowFeatureFiles>
     </ItemGroup>
 
     <ItemGroup>
@@ -49,10 +41,6 @@
         <DesignTime>true</DesignTime>
         <Visible>true</Visible>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="StepDefinitions" />
     </ItemGroup>
 
 </Project>

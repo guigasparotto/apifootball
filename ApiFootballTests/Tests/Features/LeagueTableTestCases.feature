@@ -10,5 +10,5 @@ Feature: League Table Returns Correct Data
     
     Examples:
       | teamA   | leagueA | teamB     | leagueB | teamC   | leagueC |
-      | Arsenal | 2       | Marseille | 4       | Gremio  | 6       |  
+      | Arsenal | 2       | Marseille | 4       | Gremio  | 6       |
     

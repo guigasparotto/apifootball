@@ -12,6 +12,12 @@ namespace ApiFootballTests.Tests.StepDefinitions
     [Scope(Tag = "LeagueTable")]
     public class LeagueTableSteps
     {
+        [BeforeScenario]
+        public void SetUp()
+        {
+            _leagueTableEndpoint = new LeagueTableEndpoint();
+        }
+
         [Given("I request information from (.*) part of league (.*)")]
         public void GivenIRequestInformationFromTeamPartOfLeague(string teamName, int leagueId)
         {
@@ -20,14 +26,14 @@ namespace ApiFootballTests.Tests.StepDefinitions
            Assert.AreEqual(teamName, this._teams.Last()?.TeamName, "Incorrect team added");
         }
 
-        [When("the teams are compared by goals in home games")]
+        [When(@"the teams are compared by goals in home games")]
         public void WhenTheTeamsAreComparedByGoalsInHomeGames()
         {
             this._highestScorer = this._teams.Find(x => 
                 x?.Home.GoalsFor == this._teams.Max(s => s?.Home.GoalsFor));
         }
 
-        [Then("The team with the highest score is returned")]
+        [Then(@"the team with the highest score is returned")]
         public void ThenTheTeamWithTheHighestScoreIsReturned()
         {
             Console.WriteLine(this._highestScorer);

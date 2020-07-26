@@ -9,6 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Utilities\**" />
+      <EmbeddedResource Remove="Utilities\**" />
+      <None Remove="Utilities\**" />
+      <SpecFlowFeatureFiles Remove="Utilities\**" />
+      <SpecFlowObsoleteCodeBehindFiles Remove="Utilities\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Base\Libraries.cs" />
+      <Compile Remove="Tests\LeagueTableTests.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.6" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.6" />
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.6" />
@@ -31,12 +44,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Tests\Features\LeagueTableTestCases.feature" />
+        <Content Include="Tests\Features\LeagueTableEndpointTests.feature" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Tests\Features\LeagueTableTestCases.feature.cs">
-        <DependentUpon>LeagueTableTestCases.feature</DependentUpon>
+      <Compile Update="Tests\Features\LeagueTableEndpointTests.feature.cs">
+        <DependentUpon>LeagueTableEndpointTests.feature</DependentUpon>
         <AutoGen>true</AutoGen>
         <DesignTime>true</DesignTime>
         <Visible>true</Visible>

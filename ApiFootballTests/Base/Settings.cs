@@ -1,10 +1,9 @@
-namespace ApiFootballTests.Helpers
+namespace ApiFootballTests.Base
 {
-    public class TestConfiguration
+    public class Settings
     {
         public string BaseUrl { get; set; }
         public string ApiVersion { get; set; }
         public string ApiKey { get; set; }
-        public string[] Workspaces { get; set; }
     }
 }

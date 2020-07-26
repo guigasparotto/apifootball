@@ -20,25 +20,25 @@ namespace ApiFootballTests.Tests.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("League Table Returns Correct Data")]
-    [NUnit.Framework.CategoryAttribute("LeagueTable")]
-    public partial class LeagueTableReturnsCorrectDataFeature
+    [NUnit.Framework.DescriptionAttribute("Trophies Endpoint Returns Correct Data")]
+    [NUnit.Framework.CategoryAttribute("Trophies")]
+    public partial class TrophiesEndpointReturnsCorrectDataFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
         private string[] _featureTags = new string[] {
-                "LeagueTable"};
+                "Trophies"};
         
-#line 1 "LeagueTableTestCases.feature"
+#line 1 "TrophiesEndpointTests.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "League Table Returns Correct Data", null, ProgrammingLanguage.CSharp, new string[] {
-                        "LeagueTable"});
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Trophies Endpoint Returns Correct Data", null, ProgrammingLanguage.CSharp, new string[] {
+                        "Trophies"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,23 +77,18 @@ namespace ApiFootballTests.Tests.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Comparing teams from different leagues by goals in home games returns the highest" +
-            " score team")]
-        [NUnit.Framework.TestCaseAttribute("Arsenal", "2", "Marseille", "4", "Gremio", "6", null)]
-        public virtual void ComparingTeamsFromDifferentLeaguesByGoalsInHomeGamesReturnsTheHighestScoreTeam(string teamA, string leagueA, string teamB, string leagueB, string teamC, string leagueC, string[] exampleTags)
+        [NUnit.Framework.DescriptionAttribute("Search by choach name returns correct information")]
+        [NUnit.Framework.TestCaseAttribute("E. Howe", "2", null)]
+        [NUnit.Framework.TestCaseAttribute("J. Klopp", "22", null)]
+        public virtual void SearchByChoachNameReturnsCorrectInformation(string coach, string trophies, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("teamA", teamA);
-            argumentsOfScenario.Add("leagueA", leagueA);
-            argumentsOfScenario.Add("teamB", teamB);
-            argumentsOfScenario.Add("leagueB", leagueB);
-            argumentsOfScenario.Add("teamC", teamC);
-            argumentsOfScenario.Add("leagueC", leagueC);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Comparing teams from different leagues by goals in home games returns the highest" +
-                    " score team", null, tagsOfScenario, argumentsOfScenario);
+            argumentsOfScenario.Add("coach", coach);
+            argumentsOfScenario.Add("trophies", trophies);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Search by choach name returns correct information", null, tagsOfScenario, argumentsOfScenario);
 #line 4
-  this.ScenarioInitialize(scenarioInfo);
+this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
             bool isFeatureIgnored = default(bool);
@@ -113,19 +108,13 @@ namespace ApiFootballTests.Tests.Features
             {
                 this.ScenarioStart();
 #line 5
-    testRunner.Given(string.Format("I request information from {0} part of league {1}", teamA, leagueA), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given(string.Format("the user retrieves the id of coach {0}", coach), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 6
-      testRunner.And(string.Format("I request information from {0} part of league {1}", teamB, leagueB), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.When("the user requests information about the coach trophies", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 7
-      testRunner.And(string.Format("I request information from {0} part of league {1}", teamC, leagueC), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 8
-     testRunner.When("the teams are compared by goals in home games", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 9
-     testRunner.Then("the team with the highest score is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then(string.Format("the information about the coach contains {0} trophies", trophies), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

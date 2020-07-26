@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using ApiFootballTests.Models.LeagueTable;
+using ApiFootballTests.Base;
 using RestSharp;
-using RestSharp.Serialization.Json;
+using System.Collections.Generic;
 
 namespace ApiFootballTests.Objects
 {
@@ -10,10 +11,10 @@ namespace ApiFootballTests.Objects
     {
         public LeagueTableEndpoint()
         {
-            this._leagueTableEndpoint = $"{this.BaseAddress}/leagueTable";
+            this._leagueTableEndpointUrl = $"{this.BaseAddress}/leagueTable";
         }
 
-        public Standing? GetTeamByName(string teamName, int leagueId)
+        public Standing GetTeamByName(string teamName, int leagueId)
         {
             var leagueTable = this.GetLeagueTable(leagueId);
 
@@ -24,19 +25,70 @@ namespace ApiFootballTests.Objects
             return standing;
         }
 
+        public Standing GetBestCurrentForm(List<Standing> teams)
+        {
+            var bestTeam = new Standing();
+            var bestForm = 0;
+
+            foreach (var team in teams)
+            {
+                var leagueId = new LeagueEndpoint().GetLeagueByName(team.Group).LeagueId;
+
+                var formScore = this.GetTeamForm(team.TeamName, leagueId); 
+
+                // It might be the case that two teams have the same score
+                // Need to verify how to choose the best form in this case
+                if (formScore > bestForm)
+                {
+                    bestForm = formScore;
+                    bestTeam = team;
+                }
+            }
+
+            return bestTeam;
+        }
+
+        public int GetTeamForm(string teamName, int leagueId)
+        {
+            var standing = this.GetTeamByName(teamName, leagueId);
+            var currentForm = 0;
+
+            foreach (char c in standing.Forme)
+            {
+                switch(c)
+                {
+                    case 'W':
+                        currentForm += 3;
+                        break;
+                    case 'D':
+                        currentForm += 1;
+                        break;
+                    case 'L':
+                        currentForm += 0;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return currentForm;
+        }
+
         public LeagueTable GetLeagueTable(int leagueId)
         {
-            var request = new RestRequest($"{this._leagueTableEndpoint}/{leagueId}", Method.GET);
-            request.AddHeader("X-RapidAPI-Key", this.TestConfiguration.ApiKey);
+            this.RestRequest = new RestRequest($"{this._leagueTableEndpointUrl}/{leagueId}", Method.GET);
+            this.AuthoriseRequest();
 
-            var httpResponse = RestClient.Execute(request);
+            var httpResponse = this.RestClient
+                .ExecuteGetAsync<LeagueTable>(this.RestRequest)
+                .GetAwaiter()
+                .GetResult();
+
             if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
-            
-            var deserialize = new JsonDeserializer();
-            
-            return deserialize.Deserialize<LeagueTable>(httpResponse);
+
+            return httpResponse.Data;
         }
         
-        private readonly string _leagueTableEndpoint;
+        private readonly string _leagueTableEndpointUrl;
     }
 }

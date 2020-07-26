@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ApiFootballTests.Models.LeagueTable
 {
-    public class Api
+    public class LeagueTableApi
     {
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public int? Results { get; set; }

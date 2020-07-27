@@ -15,7 +15,7 @@ Clone the repository to your local machine
 git clone https://github.com/guigasparotto/apifootball.git
 ```
 There are two options:
-1. Open the project in Visual Studio and run the tests via Test Explorer `Test > Test Explorer`
+1. Open the project in Visual Studio and run the tests via Test Explorer `Test > Test Explorer`. In this case, it's necessary to add your api key to the `appsettings.json` file.
 2. Open powershell, navigate to the folder where you cloned the project and run
 ```
 .\run_tests.ps1 -ApiKey "yourApiKey" 

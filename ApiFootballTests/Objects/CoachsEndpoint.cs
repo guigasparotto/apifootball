@@ -9,7 +9,7 @@ namespace ApiFootballTests.Objects
     {
         public CoachsEndpoint()
         {
-            this._coachsEndpointUrl = $"{this.BaseAddress}/coachs";
+            _coachsEndpointUrl = $"{BaseAddress}/coachs";
         }
 
         public Coachs GetCoachByName(string name)

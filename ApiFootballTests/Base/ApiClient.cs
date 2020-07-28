@@ -1,4 +1,5 @@
-using Dynamitey.DynamicObjects;
+using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 
@@ -6,26 +7,48 @@ namespace ApiFootballTests.Base
 {
     public class ApiClient
     {
+        protected RestClient RestClient => new RestClient(BaseAddress);
+        protected IRestRequest RestRequest { get; set; } = new RestRequest();
+        private Settings Settings { get; }
+        
+        protected readonly string BaseAddress;
+
         public ApiClient()
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", false, true)
                 .AddEnvironmentVariables()
                 .Build();
 
-            this.Settings = config.GetSection("ApiFootball").Get<Settings>();
-            this.BaseAddress = $"{this.Settings.BaseUrl}/{this.Settings.ApiVersion}";
+            Settings = config.GetSection("ApiFootball").Get<Settings>();
+            BaseAddress = $"{Settings.BaseUrl}/{Settings.ApiVersion}";
         }
 
         public void AuthoriseRequest()
         {
-            this.RestRequest.AddHeader("X-RapidAPI-Key", this.Settings.ApiKey);
+            RestRequest.AddHeader("X-RapidAPI-Key", this.Settings.ApiKey);
         }
+  
+        public async Task<T> GetRequest<T>(string endpoint)
+        {
+            RestRequest = new RestRequest($"{endpoint}", Method.GET);
+            
+            
+            AuthoriseRequest();
 
-        protected RestClient RestClient => new RestClient(BaseAddress);
-
-        protected IRestRequest RestRequest { get; set; } = new RestRequest();   
-        protected Settings Settings { get; }
-        protected readonly string BaseAddress;
+            IRestResponse<T> httpResponse;
+            try
+            {
+                httpResponse = await RestClient.ExecuteGetAsync<T>(RestRequest);
+                
+                if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return httpResponse.Data;
+        }
     }
 }

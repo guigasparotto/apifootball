@@ -1,47 +1,29 @@
 ﻿using ApiFootballTests.Base;
 using ApiFootballTests.Models.Leagues;
-using RestSharp;
-using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ApiFootballTests.Objects
 {
     class LeagueEndpoint : ApiClient
     {
+        private readonly string _leagueEndpointUrl;
         public LeagueEndpoint()
         {
-            this._leagueEndpointUrl = $"{this.BaseAddress}/leagues";
+            _leagueEndpointUrl = $"{BaseAddress}/leagues";
         }
-
-        public League GetLeagueById(int leagueId)
+        public async Task<League> GetLeagueById(int leagueId)
         {
-            var league = this.GetLeagues().Api.Leagues.First(x => x.LeagueId == leagueId);
-
-            return league;
+            var league = await GetRequest<Leagues>(_leagueEndpointUrl);
+            
+            return league.Api.Leagues.First(x => x.LeagueId == leagueId);
         }
 
-        public League GetLeagueByName(string leagueName)
+        public async Task<League> GetLeagueByName(string leagueName)
         {
-            var league = this.GetLeagues().Api.Leagues.First(x => x.Name == leagueName);
+            var league = await GetRequest<Leagues>(_leagueEndpointUrl);
 
-            return league;
+            return league.Api.Leagues.First(x => x.Name == leagueName);
         }
-
-        public Leagues GetLeagues()
-        {
-            this.RestRequest = new RestRequest($"{this._leagueEndpointUrl}", Method.GET);
-            this.AuthoriseRequest();
-
-            var httpResponse = this.RestClient
-                .ExecuteGetAsync<Leagues>(this.RestRequest)
-                .GetAwaiter()
-                .GetResult();
-
-            if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
-
-            return httpResponse.Data;
-        }
-
-        private readonly string _leagueEndpointUrl;
     }
 }

@@ -1,7 +1,7 @@
 ﻿@Trophies
 Feature: Trophies Endpoint Returns Correct Data
 
-Scenario Outline: Search by choach name returns correct information
+Scenario Outline: Search by coach name returns correct information
 	Given the user retrieves the id of coach <coach>
 	 When the user requests information about the coach trophies
 	 Then the information about the coach contains <trophies> trophies
@@ -9,4 +9,3 @@ Scenario Outline: Search by choach name returns correct information
     Examples:
       | coach    | trophies |
       | E. Howe  | 2        |
-      | J. Klopp | 22       |

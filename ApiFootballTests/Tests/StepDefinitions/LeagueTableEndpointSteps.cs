@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ApiFootballTests.Models.LeagueTable;
 using ApiFootballTests.Objects;
 using NUnit.Framework;
@@ -11,6 +12,11 @@ namespace ApiFootballTests.Tests.StepDefinitions
     [Scope(Tag = "LeagueTable")]
     public class LeagueTableEndpointSteps
     {
+        private Standing? _highestScorer;
+        private Standing? _highestForm;
+        private readonly List<Standing?> _teams = new List<Standing?>();
+        private LeagueTableEndpoint? _leagueTableEndpoint;
+        
         [BeforeScenario]
         public void SetUp()
         {
@@ -18,34 +24,34 @@ namespace ApiFootballTests.Tests.StepDefinitions
         }
 
         [Given(@"the user requests information from (.*) part of league (.*)")]
-        public void GivenITheUserRequeststInformationFromTeamPartOfLeague(string teamName, int leagueId)
+        public async Task GivenITheUserRequestsInformationFromTeamPartOfLeague(string teamName, int leagueId)
         {
-           this._teams.Add(this._leagueTableEndpoint.GetTeamByName(teamName, leagueId));
+            if (_leagueTableEndpoint != null) _teams.Add(await _leagueTableEndpoint?.GetTeamByName(teamName, leagueId));
         }
 
         [When(@"the teams are compared by goals in home games")]
         public void WhenTheTeamsAreComparedByGoalsInHomeGames()
         {
-            this._highestScorer = this._teams.Find(x => 
-                x?.Home.GoalsFor == this._teams.Max(s => s?.Home.GoalsFor));
+            _highestScorer = _teams.Find(x => 
+                x?.Home.GoalsFor == _teams.Max(s => s?.Home.GoalsFor));
         }
 
         [When(@"the teams are compared by current form")]
-        public void WhenTheTeamsAreComparedByCurrentForm()
+        public async Task WhenTheTeamsAreComparedByCurrentForm()
         {
-            this._highestForm = _leagueTableEndpoint.GetBestCurrentForm(this._teams);
+            _highestForm = await _leagueTableEndpoint?.GetBestCurrentForm(_teams);
         }
 
         [Then(@"the team (.*), which scored the most, is returned")]
         public void ThenTheTeamArsenalWhichScoredTheMostIsReturned(string highestScorer)
         {
-            Assert.AreEqual(highestScorer, this._highestScorer.TeamName, "Incorrect team returned");
+            Assert.AreEqual(highestScorer, _highestScorer?.TeamName, "Incorrect team returned");
         }
 
         [Then(@"the team (.*), with the best current form, is returned")]
         public void ThenTheTeamWithTheBestCurrentFormIsReturned(string highestForm)
         {
-            Assert.AreEqual(highestForm, this._highestForm.TeamName, "Incorrect team returned");
+            Assert.AreEqual(highestForm, _highestForm?.TeamName, "Incorrect team returned");
         }
 
         [AfterScenario]
@@ -53,10 +59,5 @@ namespace ApiFootballTests.Tests.StepDefinitions
         {
             _teams.Clear();
         }
-
-        private Standing? _highestScorer;
-        private Standing? _highestForm;
-        private List<Standing?> _teams = new List<Standing?>();
-        private LeagueTableEndpoint _leagueTableEndpoint;
     }
 }

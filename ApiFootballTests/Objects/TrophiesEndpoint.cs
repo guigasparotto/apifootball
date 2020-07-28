@@ -1,32 +1,22 @@
 ﻿using ApiFootballTests.Base;
 using ApiFootballTests.Models.Trophies;
-using RestSharp;
-using System;
+using System.Threading.Tasks;
 
 namespace ApiFootballTests.Objects
 {
     class TrophiesEndpoint : ApiClient
     {
+        private readonly string _trophiesEndpointUrl;
         public TrophiesEndpoint()
         {
-            this._trophiesEndpointUrl = $"{this.BaseAddress}/trophies";
+            _trophiesEndpointUrl = $"{BaseAddress}/trophies";
         }
-
-        public Trophies GetTrophiesByCoachId(int coachId)
+        public async Task<Trophies> GetTrophiesByCoachId(int coachId)
         {
-            this.RestRequest = new RestRequest($"{this._trophiesEndpointUrl}/coach/{coachId}", Method.GET);
-            this.AuthoriseRequest();
+            string endpoint = $"{_trophiesEndpointUrl}/coach/{coachId}";
+            var response = await GetRequest<Trophies>(endpoint);
 
-            var httpResponse = this.RestClient
-                .ExecuteGetAsync<Trophies>(this.RestRequest)
-                .GetAwaiter()
-                .GetResult();
-
-            if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
-
-            return httpResponse.Data;
+            return response;
         }
-
-        private readonly string _trophiesEndpointUrl;
     }
 }

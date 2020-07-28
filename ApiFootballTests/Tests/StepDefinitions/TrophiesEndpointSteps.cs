@@ -4,6 +4,7 @@ using ApiFootballTests.Objects;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace ApiFootballTests.Tests.StepDefinitions
@@ -12,6 +13,11 @@ namespace ApiFootballTests.Tests.StepDefinitions
     [Scope(Tag = "Trophies")]
     class TrophiesEndpointSteps
     {
+        private Coach? _expectedCoach;
+        private Trophies? _trophies;
+        private TrophiesEndpoint? _trophiesEndpoint;
+        private CoachsEndpoint? _coachsEndpoint;
+        
         [BeforeScenario]
         public void SetUp()
         {
@@ -22,28 +28,32 @@ namespace ApiFootballTests.Tests.StepDefinitions
         [Given(@"the user retrieves the id of coach (.*)")]
         public void GivenTheUserRetrievesTheIdOfCoach(string coachName)
         {
-            this._expectedCoach = this._coachsEndpoint
-                .GetCoachByName(coachName).Api.Coachs.First();
+            _expectedCoach = this._coachsEndpoint?.GetCoachByName(coachName).Api.Coachs.First();
 
-            Assert.AreEqual(this._expectedCoach.Name, coachName, "Incorrect coach retrieved");
+            Assert.AreEqual(this._expectedCoach?.Name, coachName, "Incorrect coach retrieved");
         }
 
         [When(@"the user requests information about the coach trophies")]
-        public void WhenTheUserRequestsInformationAboutTheCoachTrophies()
+        public async Task WhenTheUserRequestsInformationAboutTheCoachTrophies()
         {
-           var id = this._expectedCoach.Id;
-
-           this._trophies =  this._trophiesEndpoint.GetTrophiesByCoachId(id);
+            if (_expectedCoach != null)
+            {
+                var id = _expectedCoach.Id;
+                _trophies = await _trophiesEndpoint?.GetTrophiesByCoachId(id)!;
+            }
         }
 
         [Then(@"the information about the coach contains (.*) trophies")]
         public void ThenTheInformationAboutTheCoachContainsTrophies(int trophies)
         {
-            var expectedQty = this._trophies.Api.Results;
+            if (_trophies != null)
+            {
+                var expectedQty = _trophies.Api.Results;
 
-            Assert.AreEqual(expectedQty, trophies, "Quantities don't match");
+                Assert.AreEqual(expectedQty, trophies, "Quantities don't match");
+            }
 
-            this.PrintCoachInfo(this._trophies);
+            PrintCoachInfo(_trophies);
         }
 
         private void PrintCoachInfo(Trophies trophies)
@@ -51,7 +61,7 @@ namespace ApiFootballTests.Tests.StepDefinitions
             var trophiesList = trophies.Api.Trophies;
 
             Console.WriteLine("");
-            Console.WriteLine("Coach {0} trophies:\n", this._expectedCoach.Name);
+            Console.WriteLine("Coach {0} trophies:\n", _expectedCoach?.Name);
 
             foreach (var trophy in trophiesList)
             {
@@ -63,9 +73,6 @@ namespace ApiFootballTests.Tests.StepDefinitions
             }
         }
 
-        private Coach _expectedCoach;
-        private Trophies _trophies;
-        private TrophiesEndpoint _trophiesEndpoint;
-        private CoachsEndpoint _coachsEndpoint;
+      
     }
 }

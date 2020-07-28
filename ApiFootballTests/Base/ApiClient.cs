@@ -31,6 +31,7 @@ namespace ApiFootballTests.Base
                 throw new Exception("API Key is null in the json file.");
             }
             RestRequest.AddHeader("X-RapidAPI-Key", Settings.ApiKey);
+            RestRequest.AddHeader("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com");
         }
   
         public async Task<T> GetRequest<T>(string endpoint)

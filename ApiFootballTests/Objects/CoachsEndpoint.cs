@@ -1,32 +1,24 @@
 ﻿using ApiFootballTests.Base;
 using ApiFootballTests.Models.Coaches;
-using RestSharp;
-using System;
+using System.Threading.Tasks;
 
 namespace ApiFootballTests.Objects
 {
     public class CoachsEndpoint : ApiClient
     {
+        private readonly string _coachsEndpointUrl;
         public CoachsEndpoint()
         {
             _coachsEndpointUrl = $"{BaseAddress}/coachs";
         }
 
-        public Coachs GetCoachByName(string name)
+        public async Task<Coachs> GetCoachByName(string name)
         {
-            this.RestRequest = new RestRequest($"{this._coachsEndpointUrl}/search/{name}", Method.GET);
-            this.AuthoriseRequest();
+            string endpoint = $"{_coachsEndpointUrl}/search/{name}";
+            
+            var response = await GetRequest<Coachs>(endpoint);
 
-            var httpResponse = this.RestClient
-                .ExecuteGetAsync<Coachs>(this.RestRequest)
-                .GetAwaiter()
-                .GetResult();
-
-            if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
-
-            return httpResponse.Data;
+            return response;
         }
-
-        private readonly string _coachsEndpointUrl;
     }
 }

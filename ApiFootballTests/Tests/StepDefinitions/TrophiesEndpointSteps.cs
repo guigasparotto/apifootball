@@ -13,7 +13,7 @@ namespace ApiFootballTests.Tests.StepDefinitions
     [Scope(Tag = "Trophies")]
     class TrophiesEndpointSteps
     {
-        private Coach? _expectedCoach;
+        private Coachs _expectedCoach;
         private Trophies? _trophies;
         private TrophiesEndpoint? _trophiesEndpoint;
         private CoachsEndpoint? _coachsEndpoint;
@@ -23,14 +23,15 @@ namespace ApiFootballTests.Tests.StepDefinitions
         {
             _trophiesEndpoint = new TrophiesEndpoint();
             _coachsEndpoint = new CoachsEndpoint();
+            _expectedCoach = new Coachs();
         }
 
         [Given(@"the user retrieves the id of coach (.*)")]
-        public void GivenTheUserRetrievesTheIdOfCoach(string coachName)
+        public async Task GivenTheUserRetrievesTheIdOfCoach(string coachName)
         {
-            _expectedCoach = this._coachsEndpoint?.GetCoachByName(coachName).Api.Coachs.First();
+            _expectedCoach =  await _coachsEndpoint?.GetCoachByName(coachName)!;
 
-            Assert.AreEqual(this._expectedCoach?.Name, coachName, "Incorrect coach retrieved");
+            Assert.AreEqual(_expectedCoach.Api.Coachs.First().Name, coachName, "Incorrect coach retrieved");
         }
 
         [When(@"the user requests information about the coach trophies")]
@@ -38,7 +39,7 @@ namespace ApiFootballTests.Tests.StepDefinitions
         {
             if (_expectedCoach != null)
             {
-                var id = _expectedCoach.Id;
+                var id = _expectedCoach.Api.Coachs.First().Id;
                 _trophies = await _trophiesEndpoint?.GetTrophiesByCoachId(id)!;
             }
         }
@@ -53,7 +54,7 @@ namespace ApiFootballTests.Tests.StepDefinitions
                 Assert.AreEqual(expectedQty, trophies, "Quantities don't match");
             }
 
-            PrintCoachInfo(_trophies);
+            if (_trophies != null) PrintCoachInfo(_trophies);
         }
 
         private void PrintCoachInfo(Trophies trophies)
@@ -61,7 +62,7 @@ namespace ApiFootballTests.Tests.StepDefinitions
             var trophiesList = trophies.Api.Trophies;
 
             Console.WriteLine("");
-            Console.WriteLine("Coach {0} trophies:\n", _expectedCoach?.Name);
+            Console.WriteLine("Coach {0} trophies:\n", _expectedCoach?.Api.Coachs.First().Name);
 
             foreach (var trophy in trophiesList)
             {
@@ -72,7 +73,5 @@ namespace ApiFootballTests.Tests.StepDefinitions
                     $"Place: {trophy.Place} \n");
             }
         }
-
-      
     }
 }

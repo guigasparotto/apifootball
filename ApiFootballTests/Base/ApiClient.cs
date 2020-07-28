@@ -13,7 +13,7 @@ namespace ApiFootballTests.Base
         
         protected readonly string BaseAddress;
 
-        public ApiClient()
+        protected ApiClient()
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, true)
@@ -24,15 +24,18 @@ namespace ApiFootballTests.Base
             BaseAddress = $"{Settings.BaseUrl}/{Settings.ApiVersion}";
         }
 
-        public void AuthoriseRequest()
+        private void AuthoriseRequest()
         {
-            RestRequest.AddHeader("X-RapidAPI-Key", this.Settings.ApiKey);
+            if(string.IsNullOrEmpty(Settings.ApiKey))
+            {
+                throw new Exception("API Key is null in the json file.");
+            }
+            RestRequest.AddHeader("X-RapidAPI-Key", Settings.ApiKey);
         }
   
         public async Task<T> GetRequest<T>(string endpoint)
         {
             RestRequest = new RestRequest($"{endpoint}", Method.GET);
-            
             
             AuthoriseRequest();
 
@@ -41,7 +44,8 @@ namespace ApiFootballTests.Base
             {
                 httpResponse = await RestClient.ExecuteGetAsync<T>(RestRequest);
                 
-                if (!httpResponse.IsSuccessful) throw new Exception(httpResponse.Content);
+                if (!httpResponse.IsSuccessful) 
+                    throw new Exception(httpResponse.Content);
             }
             catch (Exception e)
             {

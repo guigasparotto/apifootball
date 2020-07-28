@@ -12,13 +12,6 @@ namespace ApiFootballTests.Objects
         {
             _leagueEndpointUrl = $"{BaseAddress}/leagues";
         }
-        public async Task<League> GetLeagueById(int leagueId)
-        {
-            var league = await GetRequest<Leagues>(_leagueEndpointUrl);
-            
-            return league.Api.Leagues.First(x => x.LeagueId == leagueId);
-        }
-
         public async Task<League> GetLeagueByName(string leagueName)
         {
             var league = await GetRequest<Leagues>(_leagueEndpointUrl);

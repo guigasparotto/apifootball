@@ -24,11 +24,10 @@ namespace ApiFootballTests.Objects
                 .First()
                 .Find(s => s.TeamName == teamName);
 
-            if (standing == null)
-            {
-                throw new Exception($"data not returned for standings {standing}");
-            }
-            return standing;
+            if (standing != null) 
+                return standing;
+
+            throw new Exception("Standing not working");
         }
 
         public async Task<Standing> GetBestCurrentForm(List<Standing> teams)
@@ -57,12 +56,12 @@ namespace ApiFootballTests.Objects
             return bestTeam;
         }
 
-        public async Task<int> GetTeamForm(string teamName, int leagueId)
+        private async Task<int> GetTeamForm(string teamName, int leagueId)
         {
-            var standing =  await GetRequest<LeagueTable>($"{_leagueTableEndpointUrl}/{leagueId}");
+            var standing = await GetTeamByName(teamName, leagueId);
             var currentForm = 0;
 
-            foreach (char c in standing)
+            foreach (var c in standing.Forme)
             {
                 switch(c)
                 {

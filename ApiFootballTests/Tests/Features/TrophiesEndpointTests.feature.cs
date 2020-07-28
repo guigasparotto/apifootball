@@ -77,16 +77,15 @@ namespace ApiFootballTests.Tests.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Search by choach name returns correct information")]
+        [NUnit.Framework.DescriptionAttribute("Search by coach name returns correct information")]
         [NUnit.Framework.TestCaseAttribute("E. Howe", "2", null)]
-        [NUnit.Framework.TestCaseAttribute("J. Klopp", "22", null)]
-        public virtual void SearchByChoachNameReturnsCorrectInformation(string coach, string trophies, string[] exampleTags)
+        public virtual void SearchByCoachNameReturnsCorrectInformation(string coach, string trophies, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("coach", coach);
             argumentsOfScenario.Add("trophies", trophies);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Search by choach name returns correct information", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Search by coach name returns correct information", null, tagsOfScenario, argumentsOfScenario);
 #line 4
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
